@@ -1,0 +1,8 @@
+--INSERT INTO Users (User_Id, First_Name, Last_Name, User_Email) VALUES (1, 'Fahad', 'Almeshim', 'Someone@someone.com' ),
+--(2, 'Muhannad', 'Alomran', 'Someone@someone.com'), (3, 'Abeer', 'Almeshim', 'Someone@someone.com' );
+--INSERT INTO Roles (Roles_Id, Roles_Name) VALUES (11011, 'Admin'),(11111, 'User'), (11211, 'Organizer');
+--INSERT INTO Events ( Event_Name, Event_Date, Event_Capacity) VALUES ('CarRacingEvent','2017-1-2','135'), ('WWE','2018-10-14','55'),('Concert','2018-10-15','400');
+--INSERT INTO Ticket (Ticket_Id, Ticket_City) VALUES (1, 'Riyadh'), (2, 'Jeddah'), (3, 'Taif');
+--INSERT INTO Feedback (Feedback_Id, Feedback_Comment) VALUES (1, 'Hes a good organizor'), (2, 'Bad Event because of the organizor');
+--
+--

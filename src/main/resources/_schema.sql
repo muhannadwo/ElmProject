@@ -1,0 +1,68 @@
+--CREATE TABLE Users (
+--    User_Id INT PRIMARY KEY,
+--	First_Name VARCHAR(20) NOT NULL,
+--	Last_Name VARCHAR(20) NOT NULL,
+--	User_Email VARCHAR(50) NOT NULL,
+--	User_Date TIMESTAMP,
+--	Is_Deleted BIT DEFAULT 0,
+--
+--	Roles_Id INT
+--
+--
+--);
+--
+--CREATE TABLE Roles(
+--
+--	Roles_Id INT PRIMARY KEY,
+--	Roles_Name VARCHAR(10) NOT NULL
+--
+--
+--);
+--
+--CREATE TABLE Events (
+--
+--
+--    Event_Id INT PRIMARY KEY,
+--    Event_Name VARCHAR(30) NOT NULL,
+--    Event_Date TIMESTAMP NOT NULL,
+--    Event_Capacity VARCHAR(200),
+--    Is_Active BIT DEFAULT 0,
+--    Is_Deleted BIT DEFAULT 0,
+--
+--
+--    Organizer_Id INT
+--
+--);
+--
+--CREATE TABLE Ticket (
+--
+--    Ticket_Id INT PRIMARY KEY,
+--    Ticket_City VARCHAR(20),
+--    Is_Deleted BIT DEFAULT 0,
+--
+--
+--    Attender_Id INT,
+--    Event_Id INT
+--
+--);
+--
+--CREATE TABLE Feedback (
+--
+--    Feedback_Id INT PRIMARY KEY,
+--    Feedback_Comment VARCHAR(100),
+--    Is_Deleted BIT DEFAULT 0,
+--
+--
+--    User_Id INT
+--
+--);
+--
+--ALTER TABLE Users ADD FOREIGN KEY (Roles_Id) REFERENCES Roles (Roles_Id);
+--ALTER TABLE Events ADD FOREIGN KEY (Organizer_Id) REFERENCES Users (User_Id);
+--ALTER TABLE Ticket ADD FOREIGN KEY (Attender_Id) REFERENCES Users (User_Id);
+--ALTER TABLE Ticket ADD FOREIGN KEY (Event_Id) REFERENCES Events (Event_Id);
+--ALTER TABLE Feedback ADD FOREIGN KEY (User_Id) REFERENCES Users (User_Id);
+--
+--
+--
+--
