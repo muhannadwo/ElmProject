@@ -9,6 +9,7 @@ import com.example.Servicee.EmailSendingService;
 import com.example.Servicee.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,38 +32,50 @@ public class UsersServiceImplementation implements UserService {
 
     @Override
     public Iterable<Users> findAll(){
-
         return usersRepository.findAll();
 
     }
 
     @Override
-    public Users findById(Long id){
-        return usersRepository.findById(id).get();
+    public ResponseEntity findById(Long id){
+
+        if(usersRepository.findById(id).isPresent()){
+
+            Users users = usersRepository.findById(id).get();
+            UsersDTO usersDTO = modelMapper.map(users, UsersDTO.class);
+            return ResponseEntity.ok(usersDTO);
+
+        }else{
+
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
-    public void createUser(UsersDTO usrdto, Long rid){
+    public ResponseEntity createUser(UsersDTO usrdto, Long rid){
 
 
-         Users usr = modelMapper.map(usrdto,Users.class);
+        Users usr = modelMapper.map(usrdto,Users.class);
         usr.setRoleid( rolesRepository.findById(rid).get());
-        emailSendingService.sendNotificaitoin(usr.getUseremail(),"Thanks For Registering!","Good To Have You With Us.");
+        //emailSendingService.sendNotificaitoin(usr.getUseremail(),"Thanks For Registering!","Good To Have You With Us.");
 
-         usersRepository.save(usr);
+        return ResponseEntity.ok(usersRepository.save(usr));
 
     }
 
     @Override
-    public void updateUser(UsersDTO usersDTO, Long uid){
-
+    public ResponseEntity updateUser(UsersDTO usersDTO, Long uid){
+        if(usersRepository.findById(uid).isPresent()){
          Users user1 = usersRepository.findById(uid).get();
 
           Users users = modelMapper.map(usersDTO,Users.class);
           users.setRoleid(user1.getRoleid());
 //          if (usersRepository.findById(uid).isPresent()){
               users.setUserid(uid);
-              usersRepository.save(users);
+              return ResponseEntity.ok(usersRepository.save(users));}
+              else{
+            return ResponseEntity.badRequest().build();
+        }
 
 
 
@@ -73,8 +86,9 @@ public class UsersServiceImplementation implements UserService {
     @Override
     public void IsDeleted(Long id){
 
-        usersRepository.findById(id).get().setDeleted(true);
-        usersRepository.save(findById(id));
+        Users users = usersRepository.findById(id).get();
+        users.setDeleted(true);
+        usersRepository.save(users);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class UsersDTO {
     @Size(min = 1,max = 10)
     private String usergender;
 
-    private Roles rolesid;
+    private Roles roleid;
 
     public String getFirstname() {
         return firstname;
@@ -91,11 +91,11 @@ public class UsersDTO {
         this.usergender = usergender;
     }
 
-    public Roles getRolesid() {
-        return rolesid;
+    public Roles getRoleid() {
+        return roleid;
     }
 
-    public void setRolesid(Roles rolesid) {
-        this.rolesid = rolesid;
+    public void setRoleid(Roles roleid) {
+        this.roleid = roleid;
     }
 }

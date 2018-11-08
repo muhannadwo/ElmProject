@@ -1,6 +1,8 @@
 package com.example.Servicee;
 
+import com.example.DTOs.EventsDTO;
 import com.example.Entity.Events;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,13 +14,13 @@ public interface EventsService {
 
 
 
-    Iterable<Events> findAll();
+    List<EventsDTO> findAll();
 
     Optional<Events> findById(Long id);
 
-    void createEvent(Events evnt, Long id);
+    ResponseEntity createEvent(EventsDTO eventsDTO, Long id);
 
-    void updateEvent(Events event, long eid);
+    ResponseEntity updateEvent(EventsDTO eventsDTO, long eid);
 
     void isDeleted(Long id);
 

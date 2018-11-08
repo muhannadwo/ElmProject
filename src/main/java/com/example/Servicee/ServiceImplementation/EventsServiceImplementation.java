@@ -1,6 +1,8 @@
 package com.example.Servicee.ServiceImplementation;
 
 
+import com.example.Configs.ObjectMapperUtils;
+import com.example.DTOs.EventsDTO;
 import com.example.Entity.Events;
 import com.example.Entity.Ticket;
 import com.example.Repository.EventsRepository;
@@ -8,7 +10,9 @@ import com.example.Repository.TicketRepository;
 import com.example.Repository.UsersRepository;
 import com.example.Servicee.EmailSendingService;
 import com.example.Servicee.EventsService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,9 +35,17 @@ public class EventsServiceImplementation implements EventsService {
     @Autowired
     private EmailSendingService emailSendingService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
+
     @Override
-    public Iterable<Events> findAll() {
-        return eventsRepository.findAll();
+    public List<EventsDTO> findAll(){
+
+    List<Events> events =  eventsRepository.findAll();
+    List<EventsDTO> eventsDTOS = ObjectMapperUtils.mapAll(events,EventsDTO.class);
+    return eventsDTOS;
+
     }
 
     @Override
@@ -42,26 +54,42 @@ public class EventsServiceImplementation implements EventsService {
     }
 
     @Override
-    public void createEvent(Events evnt, Long id){
-        LocalDate date = LocalDate.now().minusDays(1);
+    public ResponseEntity createEvent(EventsDTO eventsDTO, Long id){
 
-        if ( date.isBefore(evnt.getEventdate())) {
-            evnt.setOrganizer_id(usersRepository.findById(id).get());
-            eventsRepository.save(evnt);
-        }
+        LocalDate date = LocalDate.now().minusDays(1);
+        Events events = modelMapper.map(eventsDTO, Events.class);
+
+        if ( date.isBefore(events.getEventdate())) {
+            events.setOrganizer_id(usersRepository.findById(id).get());
+            return ResponseEntity.ok(eventsRepository.save(events));
+        } return ResponseEntity.badRequest().build();
     }
 
     @Override
-    public  void updateEvent(Events event, long eid){
+    public  ResponseEntity updateEvent(EventsDTO eventsDTO, long eid){
 
-        event.setOrganizer_id(usersRepository.findById(eid).get());
-        eventsRepository.save(event);
-        List<Ticket> ticket = ticketRepository.findByEventsidAndCanceledFalse(event);
-        for (Ticket ticket1 : ticket){
-            emailSendingService.sendNotificaitoin(ticket1.getAttenderid().getUseremail(),"Event Updated! ","The Event  '" + event.getEventname() + "'  Was Updated");
+        Events event = eventsRepository.findById(eid).get();
+
+        if ( eventsRepository.findById(eid).isPresent()){
+
+        Events events = modelMapper.map(eventsDTO, Events.class);
+        events.setOrganizer_id(event.getOrganizer_id());
+        events.setEventid(eid);
+
+//        List<Ticket> ticket = ticketRepository.findByEventsidAndCanceledFalse(event);
+//        for (Ticket ticket1 : ticket){
+//            emailSendingService.sendNotificaitoin(ticket1.getAttenderid().getUseremail(),"Event Updated! ","The Event  '" + event.getEventname() + "'  Was Updated");
+//        }
+            return ResponseEntity.ok(eventsRepository.save(events));
+
+
+        }
+            else{
+            return ResponseEntity.badRequest().build();
         }
 
-    }
+
+        }
 
     @Override
     public void isDeleted(Long id) {

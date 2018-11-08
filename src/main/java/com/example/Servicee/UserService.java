@@ -3,6 +3,7 @@ package com.example.Servicee;
 
 import com.example.DTOs.UsersDTO;
 import com.example.Entity.Users;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +15,11 @@ public interface UserService {
 
 
     Iterable<Users> findAll();
-    Users findById(Long id);
+    ResponseEntity findById(Long id);
 
-    void createUser(UsersDTO usersDTO, Long rid);
+    ResponseEntity createUser(UsersDTO usersDTO, Long rid);
 
-    void updateUser(UsersDTO usersDTO, Long uid);
+    ResponseEntity updateUser(UsersDTO usersDTO, Long uid);
 
     void IsDeleted(Long id);
 

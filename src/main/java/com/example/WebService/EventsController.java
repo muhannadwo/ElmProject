@@ -1,9 +1,13 @@
 package com.example.WebService;
 
+import com.example.Configs.ObjectMapperUtils;
+import com.example.DTOs.EventsDTO;
 import com.example.Entity.Events;
+import com.example.Repository.EventsRepository;
 import com.example.Servicee.EventsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,9 +23,12 @@ public class EventsController {
     @Autowired
     private EventsService eventsService;
 
+    @Autowired
+    private EventsRepository eventsRepository;
+
     @RequestMapping (value = "/all/events", method = RequestMethod.GET)
-    public Iterable<Events> findall(){
-        return eventsService.findAll();
+    public List<EventsDTO> findall(){
+       return eventsService.findAll();
     }
 
     @RequestMapping (value = "/event/{id}", produces = "application/json")
@@ -36,14 +43,21 @@ public class EventsController {
     }
 
     @PostMapping (value = "/create/{id}")
-    public void createevent(@Valid  @RequestBody Events event, @PathVariable Long id){
-        eventsService.createEvent(event,id);
+    public ResponseEntity createevent( @RequestBody @Valid EventsDTO eventsDTO, @PathVariable Long id, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());}
+            else {return ResponseEntity.ok(eventsService.createEvent(eventsDTO, id));}
     }
 
-    @PostMapping (value = "/update/{eid}")
-    public void updateevent(@RequestBody Events evnt, @PathVariable long eid){
+    @PutMapping (value = "/update/{eid}")
+    public ResponseEntity updateevent(@RequestBody @Valid EventsDTO eventsDTO, @PathVariable long eid, BindingResult bindingResult){
 
-        eventsService.updateEvent(evnt,eid);
+        if (bindingResult.hasErrors()){
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        else{
+            return ResponseEntity.ok(eventsService.updateEvent(eventsDTO,eid));
+        }
     }
 
     @RequestMapping (value = "/active/{id}")

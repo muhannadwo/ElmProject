@@ -1,7 +1,12 @@
 package com.example.Entity;
 
 
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,12 +19,15 @@ public class Events {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long eventid;
 
-
+    @Size(min = 2,max = 15)
     private  String eventname;
+    @DateTimeFormat
     private LocalDate eventdate;
+    @Max(300)
     private long eventcapacity;
     private boolean active;
     private boolean deleted ;
+    @Size(min = 2,max = 15)
     private String eventcity;
     private String eventtime;
     private long ecount = 0;
