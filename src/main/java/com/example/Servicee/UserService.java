@@ -1,7 +1,7 @@
 package com.example.Servicee;
 
 
-import com.example.Entity.Roles;
+import com.example.DTOs.UsersDTO;
 import com.example.Entity.Users;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,9 @@ public interface UserService {
     Iterable<Users> findAll();
     Users findById(Long id);
 
-    void createUser(Users usr, Long rid);
+    void createUser(UsersDTO usersDTO, Long rid);
 
-    void updateUser(Users user, long rid);
+    void updateUser(UsersDTO usersDTO, Long uid);
 
     void IsDeleted(Long id);
 

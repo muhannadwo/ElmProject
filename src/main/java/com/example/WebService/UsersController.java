@@ -1,11 +1,13 @@
 package com.example.WebService;
 
 
+import com.example.DTOs.UsersDTO;
 import com.example.Entity.Users;
 import com.example.Servicee.EmailSendingService;
 import com.example.Servicee.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -36,16 +38,17 @@ public class UsersController {
     }
 
     @PostMapping  (value = "/create/{rid}")
-    public void createuser(@Valid @RequestBody Users usr, @PathVariable Long rid)
+    public void createuser(@Valid @RequestBody UsersDTO usrdto, @Valid @PathVariable Long rid)
     {
-            userService.createUser(usr,rid);
+
+            userService.createUser(usrdto,rid);
 
     }
 
-    @PutMapping (value = "/update/{rid}")
-    public void updateUser(@Valid @RequestBody Users user,@PathVariable long rid){
+    @PutMapping (value = "/update/{uid}")
+    public void updateUser(@Valid @RequestBody UsersDTO usersDTO,@Valid @PathVariable Long uid){
 
-        userService.updateUser(user,rid);
+        userService.updateUser(usersDTO,uid);
     }
 
     @RequestMapping (value = "/delete/{id}")

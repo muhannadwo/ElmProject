@@ -21,11 +21,11 @@ public class Users {
 
    // @Column(name = "First_Name")
     @NotNull
-    @Size(min = 2,max = 15,message = "Name Must Be Between 2,15 Characters!")
+    @Size(min = 2,max = 15)
     private  String firstname;
 
     //@Column (name = "Last_Name")
-    @Size(min = 2,max = 20,message = " Last Name Must Be Between 2,20 Characters!")
+    @Size(min = 2,max = 20)
     private  String lastname;
 
     @Email@NotNull
@@ -40,10 +40,10 @@ public class Users {
    // @Column (name = "User_Date")
     private Date userdate;
 
-    @NotNull@NotBlank(message = "Password Must Be With Not '-/'")
+    @NotNull@NotBlank
     private String password;
 
-    @Size(min = 1,max = 20, message = "Must Not Be Larger Than 20 Characters!")
+    @Size(min = 1,max = 20)
     private String city;
 
     @Size(min = 1,max = 10)
@@ -54,6 +54,7 @@ public class Users {
     //(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     //@JoinColumn(name = "role",referencedColumnName = "Roles_Id")
     @ManyToOne
+    @JoinColumn(referencedColumnName = "roleid")
     private Roles roleid;
 
     // Getters and Setters for Roles.

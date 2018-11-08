@@ -1,12 +1,13 @@
 package com.example.Servicee.ServiceImplementation;
 
 
-import com.example.Entity.Roles;
+import com.example.DTOs.UsersDTO;
 import com.example.Entity.Users;
 import com.example.Repository.RolesRepository;
 import com.example.Repository.UsersRepository;
 import com.example.Servicee.EmailSendingService;
 import com.example.Servicee.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,9 @@ public class UsersServiceImplementation implements UserService {
     @Autowired
     private EmailSendingService emailSendingService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public Iterable<Users> findAll(){
 
@@ -38,17 +42,31 @@ public class UsersServiceImplementation implements UserService {
     }
 
     @Override
-    public void createUser(Users usr, Long rid){
-         usr.setRoleid( rolesRepository.findById(rid).get());
+    public void createUser(UsersDTO usrdto, Long rid){
+
+
+         Users usr = modelMapper.map(usrdto,Users.class);
+        usr.setRoleid( rolesRepository.findById(rid).get());
+        emailSendingService.sendNotificaitoin(usr.getUseremail(),"Thanks For Registering!","Good To Have You With Us.");
+
          usersRepository.save(usr);
-         emailSendingService.sendNotificaitoin(usr.getUseremail(),"Thanks For Registering!","Good To Have You With Us.");
+
     }
 
     @Override
-    public void updateUser(Users user, long rid){
+    public void updateUser(UsersDTO usersDTO, Long uid){
 
-        user.setRoleid(rolesRepository.findById(rid).get());
-        usersRepository.save(user);
+         Users user1 = usersRepository.findById(uid).get();
+
+          Users users = modelMapper.map(usersDTO,Users.class);
+          users.setRoleid(user1.getRoleid());
+//          if (usersRepository.findById(uid).isPresent()){
+              users.setUserid(uid);
+              usersRepository.save(users);
+
+
+
+
 
     }
 
