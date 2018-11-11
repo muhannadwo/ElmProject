@@ -1,26 +1,25 @@
 package com.example.DTOs;
 
-import com.example.Entity.Events;
-import com.example.Entity.Users;
+
 
 public class TicketDTO {
 
-    private Users attenderid;
-    private Events eventsid;
+    private UsersDTO attenderid;
+    private EventsDTO eventsid;
 
-    public Users getAttenderid() {
+    public UsersDTO getAttenderid() {
         return attenderid;
     }
 
-    public void setAttenderid(Users attenderid) {
+    public void setAttenderid(UsersDTO attenderid) {
         this.attenderid = attenderid;
     }
 
-    public Events getEventsid() {
+    public EventsDTO getEventsid() {
         return eventsid;
     }
 
-    public void setEventsid(Events eventsid) {
+    public void setEventsid(EventsDTO eventsid) {
         this.eventsid = eventsid;
     }
 }

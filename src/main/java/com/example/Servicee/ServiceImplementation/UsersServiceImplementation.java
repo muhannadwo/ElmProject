@@ -84,11 +84,15 @@ public class UsersServiceImplementation implements UserService {
     }
 
     @Override
-    public void IsDeleted(Long id){
+    public ResponseEntity IsDeleted(Long id){
 
+        if (usersRepository.findById(id).isPresent()){
         Users users = usersRepository.findById(id).get();
         users.setDeleted(true);
-        usersRepository.save(users);
+        return ResponseEntity.ok(usersRepository.save(users));}
+        else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override

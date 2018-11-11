@@ -1,9 +1,15 @@
 package com.example.WebService;
 
+import com.example.DTOs.FeedbackDTO;
 import com.example.Entity.Feedback;
+import com.example.Repository.FeedbackRepository;
 import com.example.Servicee.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 @RestController
@@ -13,6 +19,8 @@ public class FeedbackController {
 
     @Autowired
     private FeedbackService feedbackService;
+    @Autowired
+    private FeedbackRepository feedbackRepository;
 
     @RequestMapping (value = "/all/feedback", method = RequestMethod.GET)
     public Iterable<Feedback> findAll(){
@@ -21,23 +29,34 @@ public class FeedbackController {
     }
 
     @RequestMapping(value = "/feedback/{id}")
-    public Feedback findbyid(@PathVariable Long id){
+    public ResponseEntity findbyid(@PathVariable Long id){
 
-        return feedbackService.findById(id);
+        if (feedbackRepository.findById(id).isPresent()){
+        return ResponseEntity.ok(feedbackService.findById(id));}
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping (value = "/create/{tid}" )
-    public void createfeedback (@RequestBody Feedback fb,@PathVariable Long tid){
-         feedbackService.createfeedback(fb,tid);
+    public ResponseEntity createfeedback (@Valid @RequestBody FeedbackDTO feedbackDTO, @PathVariable Long tid, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }else{
+            return ResponseEntity.ok(feedbackService.createfeedback(feedbackDTO, tid));
+        }
     }
 
     @PostMapping (value = "/update")
-    public void updatefeedback (Feedback fedback){
-        feedbackService.updatefeedback(fedback);
+    public void updatefeedback (@Valid @RequestBody FeedbackDTO feedbackDTO,@PathVariable long id){
+        feedbackService.updatefeedback(feedbackDTO,id);
     }
 
     @RequestMapping (value = "/delete/{id}")
-    public void isdeleted (@PathVariable long id){
-        feedbackService.isDeleted(id);
+    public ResponseEntity isdeleted (@PathVariable long id){
+        if (feedbackRepository.findById(id).isPresent())
+        return ResponseEntity.ok(feedbackService.isDeleted(id));
+        else
+            return ResponseEntity.notFound().build();
     }
 }

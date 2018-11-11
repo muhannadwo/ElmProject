@@ -1,6 +1,8 @@
 package com.example.Servicee.ServiceImplementation;
 
 
+import com.example.Configs.ObjectMapperUtils;
+import com.example.DTOs.TicketDTO;
 import com.example.Entity.Events;
 import com.example.Entity.Ticket;
 import com.example.Entity.Users;
@@ -9,7 +11,9 @@ import com.example.Repository.TicketRepository;
 import com.example.Repository.UsersRepository;
 import com.example.Servicee.EmailSendingService;
 import com.example.Servicee.TicketService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,22 +37,28 @@ public class TicketServiceImplementation implements TicketService {
     @Autowired
     private EmailSendingService emailSendingService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
 
 
 
     @Override
-    public Iterable<Ticket> findAll() {
-        return ticketRepository.findAll();
+    public List<TicketDTO> findAll() {
+        List<Ticket> tickets = ticketRepository.findAll();
+        List<TicketDTO> ticketDTOS = ObjectMapperUtils.mapAll(tickets, TicketDTO.class);
+        return ticketDTOS;
+
     }
 
 
     @Override
-    public Ticket findById(Long id) {
-        return ticketRepository.findById(id).get();
+    public Optional<Ticket> findById(Long id) {
+        return ticketRepository.findById(id);
     }
 
     @Override
-    public void createTicket ( Ticket tkt, Long uid, Long eid) {
+    public ResponseEntity createTicket (Ticket tkt, Long uid, Long eid) {
 
 
 
@@ -66,7 +76,7 @@ public class TicketServiceImplementation implements TicketService {
 //        List<Ticket> tickets = ticketRepository.findAllByAttenderid(users);
             for (Ticket tekt : ticketRepository.findAllByAttenderid(users))
                 if (events.getEventdate().equals(tekt.getEventsid().getEventdate())) {
-                    return;
+                    return null;
                 }
 
             tkt.setAttenderid(usersRepository.findById(uid).get());
@@ -74,7 +84,7 @@ public class TicketServiceImplementation implements TicketService {
 
             events.setEcount(1+events.getEcount());
             emailSendingService.sendNotificaitoin(usersRepository.findById(uid).get().getUseremail(), "Thanks For Booking", " Hope You enjoy The Event! "+ tkt.getAttenderid().getFirstname());
-            ticketRepository.save(tkt);
+            return ResponseEntity.ok(ticketRepository.save(tkt));
 
 
 //            tkt.setAttenderid(users);
@@ -84,6 +94,7 @@ public class TicketServiceImplementation implements TicketService {
 //            ticketRepository.save(tkt);
 
         }
+        return ResponseEntity.badRequest().build();
     }
 
 
@@ -97,18 +108,26 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
-    public void IsCanceled(Long id) {
+    public ResponseEntity<Ticket> IsCanceled(Long id) {
+        if (ticketRepository.findById(id).isPresent()){
         ticketRepository.findById(id).get().setCanceled(true);
         Events events=ticketRepository.findById(id).get().getEventsid();
         events.setEcount(events.getEcount() - 1);
         emailSendingService.sendNotificaitoin(ticketRepository.findById(id).get().getAttenderid().getUseremail(),"Ticket Canceled!", "Hope You Book Tickets Again");
-        ticketRepository.save(findById(id));
+        return ResponseEntity.ok(ticketRepository.save(findById(id).get()));}
+        else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
-    public void IsAttended(Long id) {
+    public ResponseEntity IsAttended(Long id) {
+
+        if (ticketRepository.findById(id).isPresent()){
         ticketRepository.findById(id).get().setAttended(true);
-        ticketRepository.save(findById(id));
+        return ResponseEntity.ok(ticketRepository.save(findById(id).get()));}
+        else{ return ResponseEntity.notFound().build();
+        }
     }
 
     @Override

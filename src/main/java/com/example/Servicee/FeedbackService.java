@@ -1,6 +1,8 @@
 package com.example.Servicee;
 
+import com.example.DTOs.FeedbackDTO;
 import com.example.Entity.Feedback;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,11 +13,11 @@ public interface FeedbackService {
 
 
      Iterable<Feedback> findAll();
-     Feedback findById(Long id);
+     ResponseEntity findById(Long id);
 
-     void createfeedback (Feedback fb, Long id);
-     void updatefeedback (Feedback feedback);
+     ResponseEntity createfeedback (FeedbackDTO feedbackDTO, Long id);
+     void updatefeedback (FeedbackDTO feedbackDTO, long id);
 
-     void isDeleted(long id);
+     ResponseEntity isDeleted(long id);
 
 }

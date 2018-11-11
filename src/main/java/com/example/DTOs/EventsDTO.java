@@ -1,16 +1,22 @@
 package com.example.DTOs;
 
 import com.example.Entity.Comment;
-import com.example.Entity.Users;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
 public class EventsDTO {
 
+    @Size(min = 2,max = 15)
     private  String eventname;
+    @DateTimeFormat
     private LocalDate eventdate;
+    @Max(300)
     private long eventcapacity;
+    @Size(min = 2,max = 15)
     private String eventcity;
     private String eventtime;
     private long ecount = 0;

@@ -18,7 +18,6 @@ import sun.java2d.pipe.RegionSpanIterator;
 import javax.naming.Binding;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping (value = "/api/users")
@@ -42,7 +41,11 @@ public class UsersController {
 
     @RequestMapping (value = "/user/{id}")
     public ResponseEntity findbyid(@PathVariable Long id){
-        return ResponseEntity.ok(userService.findById(id));
+        if(usersRepository.findById(id).isPresent()){
+        return ResponseEntity.ok(userService.findById(id));}
+        else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping  (value = "/create/{rid}")
@@ -58,15 +61,23 @@ public class UsersController {
     }
 
     @PutMapping (value = "/update/{uid}")
-    public void updateUser(@Valid @RequestBody UsersDTO usersDTO,@Valid @PathVariable Long uid){
+    public ResponseEntity updateUser(@Valid @RequestBody UsersDTO usersDTO,@Valid @PathVariable Long uid, BindingResult bindingResult){
 
-        userService.updateUser(usersDTO,uid);
+        if (bindingResult.hasErrors()){
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        else{
+            return ResponseEntity.ok(userService.updateUser(usersDTO,uid));
+        }
     }
 
     @RequestMapping (value = "/delete/{id}")
-    public void isdeleted (@PathVariable Long id){
+    public ResponseEntity isdeleted (@PathVariable Long id){
 
-        userService.IsDeleted(id);
+        if (usersRepository.findById(id).isPresent()){
+        return ResponseEntity.ok(userService.IsDeleted(id));}
+        else{return ResponseEntity.notFound().build();
+        }
 
 
     }

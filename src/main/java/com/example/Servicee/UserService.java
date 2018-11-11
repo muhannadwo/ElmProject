@@ -21,7 +21,7 @@ public interface UserService {
 
     ResponseEntity updateUser(UsersDTO usersDTO, Long uid);
 
-    void IsDeleted(Long id);
+    ResponseEntity IsDeleted(Long id);
 
     List<Users> findAllIfDeleted();
 

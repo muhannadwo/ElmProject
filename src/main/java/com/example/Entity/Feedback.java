@@ -1,6 +1,8 @@
 package com.example.Entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table (name = "Feedback")
@@ -10,7 +12,9 @@ public class Feedback {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long feedbackid;
 
+    @Max(5)
     private int feedbackrate;
+    @Size(min = 1,max = 255)
     private String feedbackcomment;
     private boolean deleted ;
 

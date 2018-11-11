@@ -1,12 +1,17 @@
 package com.example.WebService;
 
 
+import com.example.DTOs.TicketDTO;
 import com.example.Entity.Ticket;
 import com.example.Entity.Users;
+import com.example.Repository.TicketRepository;
 import com.example.Repository.UsersRepository;
 import com.example.Servicee.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import sun.java2d.pipe.RegionSpanIterator;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +23,14 @@ public class TicketController {
     @Autowired
     private TicketService ticketService;
 
+    @Autowired
+    private TicketRepository ticketRepository;
+
 
 
 
     @RequestMapping (value = "/all/tickets", method = RequestMethod.GET)
-    public Iterable<Ticket> findall(){
+    public List<TicketDTO> findall(){
 
         return ticketService.findAll();
     }
@@ -40,13 +48,24 @@ public class TicketController {
     }
 
     @GetMapping(value = "/ticket/{id}")
-    public Ticket finByid(@PathVariable Long id){
-        return ticketService.findById(id);
+    public ResponseEntity<Ticket> finByid(@PathVariable Long id){
+        Optional<Ticket> ticket =  ticketService.findById(id);
+
+        if( ticket.isPresent()){
+            return ResponseEntity.ok(ticket.get());
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @PostMapping (value = "/create/{uid}/{eid}")
-    public void createticket (@RequestBody Ticket tkt, @PathVariable Long uid, @PathVariable Long eid){
-        ticketService.createTicket(tkt,uid,eid);
+    public ResponseEntity createticket (@RequestBody Ticket tkt, @PathVariable Long uid, @PathVariable Long eid, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }else{
+            return ResponseEntity.ok(ticketService.createTicket(tkt,uid,eid));
+        }
     }
 
     @PostMapping (value = "/update")
@@ -55,12 +74,20 @@ public class TicketController {
     }
 
     @RequestMapping (value = "/cancel/{id}")
-    public void isdeleted(@PathVariable Long id){
-        ticketService.IsCanceled(id);
+    public ResponseEntity isdeleted(@PathVariable Long id){
+        if (ticketRepository.findById(id).isPresent()){
+        return ResponseEntity.ok(ticketService.IsCanceled(id));}
+        else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @RequestMapping (value = "/attended/{id}")
-    public void isattended(@PathVariable Long id){
-        ticketService.IsAttended(id);
+    public ResponseEntity isattended(@PathVariable Long id){
+        if (ticketRepository.findById(id).isPresent()){
+        return ResponseEntity.ok(ticketService.IsAttended(id));}
+        else{
+            return ResponseEntity.notFound().build();}
     }
 }
