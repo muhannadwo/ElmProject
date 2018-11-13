@@ -1,6 +1,7 @@
 package com.example.Servicee.ServiceImplementation;
 
 
+import com.example.DTOs.CommentDTO;
 import com.example.Entity.Comment;
 import com.example.Entity.Events;
 import com.example.Entity.Users;
@@ -8,7 +9,9 @@ import com.example.Repository.CommentRepository;
 import com.example.Repository.EventsRepository;
 import com.example.Repository.UsersRepository;
 import com.example.Servicee.CommentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -27,6 +30,8 @@ public class CommentServiceImplementation implements CommentService {
     private UsersRepository usersRepository;
     @Autowired
     private EventsRepository eventsRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
 
 
@@ -37,12 +42,16 @@ public class CommentServiceImplementation implements CommentService {
     }
 
     @Override
-    public Comment findById(Long id) {
-        return commentRepository.findById(id).get();
+    public ResponseEntity findById(Long id) {
+        if (commentRepository.findById(id).isPresent()){
+            return ResponseEntity.ok(commentRepository.findById(id).get());}
+            else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
-    public void createComment(Comment comment, Long uid, Long eid) {
+    public ResponseEntity createComment(Comment comment, Long uid, Long eid) {
 
         Users users = usersRepository.findById(uid).get();
         Events events = eventsRepository.findById(eid).get();
@@ -59,21 +68,35 @@ public class CommentServiceImplementation implements CommentService {
             comment.setCdate(LocalDateTime.now());
             //get comments array list from event class and add the new comment in it.
             events.getComments().add(comment);
-            commentRepository.save(comment);
+            return ResponseEntity.ok(commentRepository.save(comment));
+        }return ResponseEntity.badRequest().build();
+    }
+
+    @Override
+    public ResponseEntity updateComment(CommentDTO commentDTO, long id) {
+
+        if (commentRepository.findById(id).isPresent()) {
+            Comment comment = commentRepository.findById(id).get();
+            Comment comment1 = modelMapper.map(commentDTO, Comment.class);
+            comment1.setEventsid(comment.getEventsid());
+            comment1.setUserid(comment.getUserid());
+            comment1.setCommentid(id);
+            return ResponseEntity.ok(commentRepository.save(comment1));
+
+        }return ResponseEntity.badRequest().build();
+
+    }
+
+    @Override
+    public ResponseEntity IsCanceled(Long id) {
+
+        if (commentRepository.findById(id).isPresent()){
+        Comment comment = commentRepository.findById(id).get();
+        comment.setCanceled(true);
+        return ResponseEntity.ok(comment);}
+        else{
+            return ResponseEntity.notFound().build();
         }
-    }
-
-    @Override
-    public void updateComment(Comment comment) {
-
-         commentRepository.save(comment);
-
-    }
-
-    @Override
-    public void IsCanceled(Long id) {
-        commentRepository.findById(id).get().setCanceled(true);
-        commentRepository.save(findById(id));
     }
 
     @Override

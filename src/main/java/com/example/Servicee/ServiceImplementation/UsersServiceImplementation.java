@@ -109,4 +109,9 @@ public class UsersServiceImplementation implements UserService {
         }
         return (List<Users>) list1;
     }
+
+    @Override
+    public List<Users> findByPhonenumber(int number) {
+        return usersRepository.findByPhonenumber(number);
+    }
 }

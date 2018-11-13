@@ -8,14 +8,10 @@ import com.example.Servicee.EmailSendingService;
 import com.example.Servicee.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import sun.java2d.pipe.RegionSpanIterator;
 
-import javax.naming.Binding;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -86,6 +82,15 @@ public class UsersController {
     public List<Users> findalldeleted(){
 
         return userService.findAllIfDeleted();
+    }
+
+    @RequestMapping (value = "/phone/{number}")
+    public ResponseEntity<List<Users>> findbyphonenumber(@PathVariable int number){
+        if(usersRepository.findByPhonenumber(number).isEmpty()){
+        return ResponseEntity.notFound().build();}else{
+
+            return ResponseEntity.ok(usersRepository.findByPhonenumber(number));
+        }
     }
 
 

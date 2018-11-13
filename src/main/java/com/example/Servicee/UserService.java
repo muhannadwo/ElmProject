@@ -25,6 +25,8 @@ public interface UserService {
 
     List<Users> findAllIfDeleted();
 
+    List<Users> findByPhonenumber(int number);
+
 
 
 }

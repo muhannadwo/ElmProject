@@ -2,6 +2,7 @@ package com.example.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -48,6 +49,9 @@ public class Users {
 
     @Size(min = 1,max = 10)
     private String usergender;
+
+    @NumberFormat
+    private int phonenumber;
 
     // Object From Roles.
 
@@ -116,5 +120,13 @@ public class Users {
 
  public void setUsergender(String usergender) {
   this.usergender = usergender;
+ }
+
+ public int getPhonenumber() {
+  return phonenumber;
+ }
+
+ public void setPhonenumber(int phonenumber) {
+  this.phonenumber = phonenumber;
  }
 }

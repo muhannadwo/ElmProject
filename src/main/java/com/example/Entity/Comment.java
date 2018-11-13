@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,10 +17,13 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long commentid;
 
+    @Size(min = 1,max = 255)
     private String ccomment;
     private LocalDateTime cdate;
     @ColumnDefault("0")
     private boolean canceled;
+    @Max(5)
+    private int eventrate;
 
     @ManyToOne
     private Users userid;
@@ -79,5 +83,13 @@ public class Comment {
 
     public void setCanceled(boolean canceled) {
         this.canceled = canceled;
+    }
+
+    public int getEventrate() {
+        return eventrate;
+    }
+
+    public void setEventrate(int eventrate) {
+        this.eventrate = eventrate;
     }
 }

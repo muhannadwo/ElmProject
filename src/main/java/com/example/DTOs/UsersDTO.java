@@ -2,6 +2,7 @@ package com.example.DTOs;
 
 import com.example.Entity.Roles;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +33,9 @@ public class UsersDTO {
 
     @Size(min = 1,max = 10)
     private String usergender;
+
+    @NumberFormat
+    private int phonenumber;
 
     private Roles roleid;
 
@@ -97,5 +101,13 @@ public class UsersDTO {
 
     public void setRoleid(Roles roleid) {
         this.roleid = roleid;
+    }
+
+    public int getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(int phonenumber) {
+        this.phonenumber = phonenumber;
     }
 }
