@@ -8,14 +8,10 @@ import javax.persistence.*;
 public class Roles {
 
     @Id
-    private  long roleid;
     private String rolename;
 
     public Roles() { }
 
-    public long getRoleid() { return roleid; }
-
-    public void setRoleid(long roleid) { this.roleid = roleid; }
 
     public String getRolename() { return rolename; }
 

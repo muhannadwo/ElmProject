@@ -9,6 +9,7 @@ import com.example.Servicee.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,11 +32,13 @@ public class UsersController {
     private ModelMapper modelMapper;
 
     @RequestMapping (value = "/all/users", method = RequestMethod.GET)
+    @PreAuthorize("(hasRole('ADMIN'))")
     public Iterable<Users> findall(){
         return  userService.findAll();
     }
 
     @RequestMapping (value = "/user/{id}")
+    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public ResponseEntity findbyid(@PathVariable Long id){
         if(usersRepository.findById(id).isPresent()){
         return ResponseEntity.ok(userService.findById(id));}
@@ -68,6 +71,7 @@ public class UsersController {
     }
 
     @RequestMapping (value = "/delete/{id}")
+    @PreAuthorize("(hasRole('ADMIN'))")
     public ResponseEntity isdeleted (@PathVariable Long id){
 
         if (usersRepository.findById(id).isPresent()){
@@ -79,12 +83,14 @@ public class UsersController {
     }
 
     @RequestMapping (value = "/all/deleted")
+    @PreAuthorize("(hasRole('ADMIN'))")
     public List<Users> findalldeleted(){
 
         return userService.findAllIfDeleted();
     }
 
     @RequestMapping (value = "/phone/{number}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Users>> findbyphonenumber(@PathVariable int number){
         if(usersRepository.findByPhonenumber(number).isEmpty()){
         return ResponseEntity.notFound().build();}else{

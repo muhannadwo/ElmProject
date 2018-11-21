@@ -1,6 +1,7 @@
 package com.example.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
@@ -35,7 +36,8 @@ public class Users {
 
     @JsonIgnore
     //@Column (name = "Is_Deleted")
-    private boolean deleted;
+//    @ColumnDefault(value = "1")1
+    private boolean deleted = true;
 
     @DateTimeFormat
    // @Column (name = "User_Date")
@@ -58,7 +60,7 @@ public class Users {
     //(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     //@JoinColumn(name = "role",referencedColumnName = "Roles_Id")
     @ManyToOne
-    @JoinColumn(referencedColumnName = "roleid")
+    @JoinColumn(referencedColumnName = "rolename",name = "role")
     private Roles roleid;
 
     // Getters and Setters for Roles.

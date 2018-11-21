@@ -12,17 +12,17 @@ import java.util.Optional;
 @Service
 public class RolesServiceImplementation implements RolesService {
 
-    @Autowired
-    private RolesRepository rolesRepository;
-
-
-    @Override
-    public Roles findById(Long id) {
-        return rolesRepository.findById(id).get();
-    }
-
-    @Override
-    public Iterable<Roles> findAll() {
-        return rolesRepository.findAll();
-    }
+//    @Autowired
+//    private RolesRepository rolesRepository;
+//
+//
+//    @Override
+//    public Roles findById(Long id) {
+//        return rolesRepository.findById(id.toString()).get();
+//    }
+//
+//    @Override
+//    public Iterable<Roles> findAll() {
+//        return rolesRepository.findAll();
+//    }
 }

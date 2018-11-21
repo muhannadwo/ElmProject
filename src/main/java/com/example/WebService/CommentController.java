@@ -7,6 +7,8 @@ import com.example.Repository.CommentRepository;
 import com.example.Servicee.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +61,7 @@ public class CommentController {
     }
 
     @GetMapping(value = "/all/user/{uid}")
+    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public List<Comment> findByUser(@PathVariable long uid){
         return commentService.finAllByUser(uid);
     }

@@ -10,6 +10,7 @@ import com.example.Servicee.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -54,9 +55,19 @@ public class UsersServiceImplementation implements UserService {
     @Override
     public ResponseEntity createUser(UsersDTO usrdto, Long rid){
 
+        String a = "";
+        if (rid == 1){
+            a = "ROLE_ADMIN";
+        }else if(rid == 2){
+            a = "ROLE_ORG";
+        }else if (rid == 3){
+            a= "ROLE_USER";
+        }
 
         Users usr = modelMapper.map(usrdto,Users.class);
-        usr.setRoleid( rolesRepository.findById(rid).get());
+        usr.setRoleid( rolesRepository.findById(a).get());
+        String encoded=new BCryptPasswordEncoder().encode(usr.getPassword());
+        usr.setPassword(encoded);
         //emailSendingService.sendNotificaitoin(usr.getUseremail(),"Thanks For Registering!","Good To Have You With Us.");
 
         return ResponseEntity.ok(usersRepository.save(usr));
@@ -88,7 +99,7 @@ public class UsersServiceImplementation implements UserService {
 
         if (usersRepository.findById(id).isPresent()){
         Users users = usersRepository.findById(id).get();
-        users.setDeleted(true);
+        users.setDeleted(false);
         return ResponseEntity.ok(usersRepository.save(users));}
         else{
             return ResponseEntity.notFound().build();
@@ -104,7 +115,7 @@ public class UsersServiceImplementation implements UserService {
         Iterable<Users> list1 = new ArrayList<>();
         for ( Users usr : list){
 
-            if (!usr.isDeleted()) ((ArrayList<Users>) list1).add(usr);
+            if (usr.isDeleted()) ((ArrayList<Users>) list1).add(usr);
 
         }
         return (List<Users>) list1;

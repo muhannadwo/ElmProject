@@ -6,6 +6,7 @@ import com.example.Repository.FeedbackRepository;
 import com.example.Servicee.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,7 @@ public class FeedbackController {
     }
 
     @PostMapping (value = "/create/{tid}" )
+    @PreAuthorize("(hasRole('USER'))")
     public ResponseEntity createfeedback (@Valid @RequestBody FeedbackDTO feedbackDTO, @PathVariable Long tid, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -48,11 +50,13 @@ public class FeedbackController {
     }
 
     @PostMapping (value = "/update")
+    @PreAuthorize("(hasRole('USER'))")
     public void updatefeedback (@Valid @RequestBody FeedbackDTO feedbackDTO,@PathVariable long id){
         feedbackService.updatefeedback(feedbackDTO,id);
     }
 
     @RequestMapping (value = "/delete/{id}")
+    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public ResponseEntity isdeleted (@PathVariable long id){
         if (feedbackRepository.findById(id).isPresent())
         return ResponseEntity.ok(feedbackService.isDeleted(id));

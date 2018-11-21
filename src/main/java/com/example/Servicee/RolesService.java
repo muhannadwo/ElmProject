@@ -10,6 +10,6 @@ public interface RolesService {
 
 
 
-    Roles findById(Long id);
-    Iterable<Roles> findAll();
+//    Roles findById(Long id);
+//    Iterable<Roles> findAll();
 }
