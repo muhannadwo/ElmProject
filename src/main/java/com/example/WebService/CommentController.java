@@ -24,7 +24,7 @@ public class CommentController {
     @Autowired
     private CommentRepository commentRepository;
 
-    @RequestMapping(value = "/all/comments",method = RequestMethod.GET)
+    @GetMapping(value = "/all/comments")
     public Iterable<Comment> findAll(){
         return commentService.findAll();
     }

@@ -27,13 +27,13 @@ public class EventsController {
     @Autowired
     private EventsRepository eventsRepository;
 
-    @RequestMapping (value = "/all/events", method = RequestMethod.GET)
+    @GetMapping (value = "/all/events")
     @PreAuthorize("(hasRole('ADMIN'))")
     public List<EventsDTO> findall(){
        return eventsService.findAll();
     }
 
-    @RequestMapping (value = "/event/{id}", produces = "application/json")
+    @GetMapping (value = "/event/{id}", produces = "application/json")
     public ResponseEntity<Events> findById(@PathVariable Long id){
         Optional<Events> event =  eventsService.findById(id);
 
@@ -64,40 +64,40 @@ public class EventsController {
         }
     }
 
-    @RequestMapping (value = "/active/{id}")
+    @GetMapping (value = "/active/{id}")
     @PreAuthorize("(hasRole('ORG'))")
     public void isactive (@PathVariable Long id){
         eventsService.isActiveEvent(id);
     }
 
-    @RequestMapping (value = "/deactive/{id}")
+    @GetMapping (value = "/deactive/{id}")
     @PreAuthorize("(hasRole('ORG'))")
     public void isnotactive (@PathVariable Long id){ eventsService.isNotActiveEvent(id);}
 
-    @RequestMapping (value = "/delete/{id}")
+    @GetMapping (value = "/delete/{id}")
     @PreAuthorize("(hasAnyRole('ADMIN'))")
     public void isdeleted(@PathVariable Long id){
         eventsService.isDeleted(id);
     }
 
-    @RequestMapping (value = "/all/deleted")
+    @GetMapping (value = "/all/deleted")
     @PreAuthorize("(hasRole('ADMIN'))")
     public List<Events> findalldeleted(){
 
         return eventsService.findAllDeleted();
     }
 
-    @RequestMapping (value = "/approved")
+    @GetMapping (value = "/approved")
     public List<Events> findallactiveevents (){
         return eventsService.findAllActiveEvents();
     }
 
-    @RequestMapping (value = "/city/{eventcity}")
+    @GetMapping (value = "/city/{eventcity}")
     public List<Events> findByEventcity (@PathVariable String eventcity){
         return eventsService.findByEventcity(eventcity);
     }
 
-    @RequestMapping (value = "/date/{date}")
+    @GetMapping (value = "/date/{date}")
     public List<Events> findByEventdate (@PathVariable String date){
         return eventsService.findByEventdate(LocalDate.parse(date));
     }

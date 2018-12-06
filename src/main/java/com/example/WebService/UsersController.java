@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping (value = "/api/users")
-
+@CrossOrigin
 public class UsersController {
 
 
@@ -31,14 +31,14 @@ public class UsersController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @RequestMapping (value = "/all/users", method = RequestMethod.GET)
-    @PreAuthorize("(hasRole('ADMIN'))")
+    @GetMapping (value = "/all/users")
+//    @PreAuthorize("(hasRole('ADMIN'))")
     public Iterable<Users> findall(){
         return  userService.findAll();
     }
 
-    @RequestMapping (value = "/user/{id}")
-    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
+    @GetMapping (value = "/user/{id}")
+//    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public ResponseEntity findbyid(@PathVariable Long id){
         if(usersRepository.findById(id).isPresent()){
         return ResponseEntity.ok(userService.findById(id));}
@@ -48,7 +48,7 @@ public class UsersController {
     }
 
     @PostMapping  (value = "/create/{rid}")
-    public ResponseEntity createuser(@Valid @RequestBody UsersDTO usrdto, @Valid @PathVariable Long rid, BindingResult bindingResult)
+    public ResponseEntity createuser(@Valid @RequestBody UsersDTO usrdto,@Valid @PathVariable Long rid, BindingResult bindingResult)
     {
             if (bindingResult.hasErrors()){
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());}
@@ -70,26 +70,27 @@ public class UsersController {
         }
     }
 
-    @RequestMapping (value = "/delete/{id}")
+    @GetMapping (value = "/delete/{id}")
     @PreAuthorize("(hasRole('ADMIN'))")
-    public ResponseEntity isdeleted (@PathVariable Long id){
+    public ResponseEntity<Void> isdeleted (@PathVariable Long id){
 
         if (usersRepository.findById(id).isPresent()){
-        return ResponseEntity.ok(userService.IsDeleted(id));}
+            userService.IsDeleted(id);
+        return ResponseEntity.ok().build();}
         else{return ResponseEntity.notFound().build();
         }
 
 
     }
 
-    @RequestMapping (value = "/all/deleted")
+    @GetMapping (value = "/all/deleted")
     @PreAuthorize("(hasRole('ADMIN'))")
     public List<Users> findalldeleted(){
 
         return userService.findAllIfDeleted();
     }
 
-    @RequestMapping (value = "/phone/{number}")
+    @GetMapping (value = "/phone/{number}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Users>> findbyphonenumber(@PathVariable int number){
         if(usersRepository.findByPhonenumber(number).isEmpty()){

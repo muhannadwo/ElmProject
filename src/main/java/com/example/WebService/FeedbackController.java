@@ -29,7 +29,7 @@ public class FeedbackController {
         return feedbackService.findAll();
     }
 
-    @RequestMapping(value = "/feedback/{id}")
+    @GetMapping(value = "/feedback/{id}")
     public ResponseEntity findbyid(@PathVariable Long id){
 
         if (feedbackRepository.findById(id).isPresent()){
@@ -49,13 +49,13 @@ public class FeedbackController {
         }
     }
 
-    @PostMapping (value = "/update")
+    @PutMapping (value = "/update")
     @PreAuthorize("(hasRole('USER'))")
     public void updatefeedback (@Valid @RequestBody FeedbackDTO feedbackDTO,@PathVariable long id){
         feedbackService.updatefeedback(feedbackDTO,id);
     }
 
-    @RequestMapping (value = "/delete/{id}")
+    @GetMapping (value = "/delete/{id}")
     @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public ResponseEntity isdeleted (@PathVariable long id){
         if (feedbackRepository.findById(id).isPresent())

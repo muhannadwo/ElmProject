@@ -4,13 +4,27 @@ import com.example.Entity.Roles;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class UsersDTO {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long userid;
+
+
+    @NotNull
+    @Size(min = 2,max = 15)
+    private  String username;
 
     @NotNull
     @Size(min = 2,max = 15,message = "Name Must Be Between 2,15 Characters!")
@@ -23,7 +37,7 @@ public class UsersDTO {
     private String useremail;
 
     @DateTimeFormat
-    private Date userdate;
+    private LocalDate userdate;
 
     @NotNull@NotBlank(message = "Password Must Be With Not '-/'")
     private String password;
@@ -37,7 +51,7 @@ public class UsersDTO {
     @NumberFormat
     private int phonenumber;
 
-    private Roles roleid;
+    private Roles role;
 
     public String getFirstname() {
         return firstname;
@@ -63,11 +77,11 @@ public class UsersDTO {
         this.useremail = useremail;
     }
 
-    public Date getUserdate() {
+    public LocalDate getUserdate() {
         return userdate;
     }
 
-    public void setUserdate(Date userdate) {
+    public void setUserdate(LocalDate userdate) {
         this.userdate = userdate;
     }
 
@@ -95,13 +109,6 @@ public class UsersDTO {
         this.usergender = usergender;
     }
 
-    public Roles getRoleid() {
-        return roleid;
-    }
-
-    public void setRoleid(Roles roleid) {
-        this.roleid = roleid;
-    }
 
     public int getPhonenumber() {
         return phonenumber;
@@ -109,5 +116,29 @@ public class UsersDTO {
 
     public void setPhonenumber(int phonenumber) {
         this.phonenumber = phonenumber;
+    }
+
+    public Roles getRole() {
+        return role;
+    }
+
+    public void setRole(Roles role) {
+        this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(long userid) {
+        this.userid = userid;
     }
 }

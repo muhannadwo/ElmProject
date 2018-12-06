@@ -31,21 +31,21 @@ public class TicketController {
 
 
 
-    @RequestMapping (value = "/all/tickets", method = RequestMethod.GET)
+    @GetMapping (value = "/all/tickets")
     @PreAuthorize("(hasRole('ADMIN'))")
     public List<TicketDTO> findall(){
 
         return ticketService.findAll();
     }
 
-    @RequestMapping (value = "/all/user/{uid}", method = RequestMethod.GET)
+    @GetMapping (value = "/all/user/{uid}")
     @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public Iterable<Ticket> findalluser(@PathVariable long uid){
 
         return ticketService.findAllByUser(uid);
     }
 
-    @RequestMapping (value = "/all/delete", method = RequestMethod.GET)
+    @GetMapping (value = "/all/delete")
     @PreAuthorize("(hasRole('ADMIN'))")
     public List<Ticket> findallnotcanceled(){
 
@@ -74,12 +74,12 @@ public class TicketController {
         }
     }
 
-    @PostMapping (value = "/update")
+    @PutMapping (value = "/update")
     public  void updateticket(@RequestBody Ticket tikt){
         ticketService.updateTicket(tikt);
     }
 
-    @RequestMapping (value = "/cancel/{id}")
+    @GetMapping (value = "/cancel/{id}")
     @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public ResponseEntity isdeleted(@PathVariable Long id){
         if (ticketRepository.findById(id).isPresent()){
@@ -90,7 +90,7 @@ public class TicketController {
 
     }
 
-    @RequestMapping (value = "/attended/{id}")
+    @GetMapping (value = "/attended/{id}")
     @PreAuthorize("(hasRole('ORG'))")
     public ResponseEntity isattended(@PathVariable Long id){
         if (ticketRepository.findById(id).isPresent()){

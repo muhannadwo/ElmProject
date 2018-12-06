@@ -24,10 +24,10 @@ import javax.sql.DataSource;
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
             auth.jdbcAuthentication().dataSource(dataSource)
-                    .usersByUsernameQuery("select firstname, password, deleted "
-                            + "from users where firstname=?")
-                    .authoritiesByUsernameQuery("select firstname, role "
-                            + "from users where firstname=?")
+                    .usersByUsernameQuery("select username, password, deleted "
+                            + "from users where username=?")
+                    .authoritiesByUsernameQuery("select username, role "
+                            + "from users where username=?")
                     .passwordEncoder(new BCryptPasswordEncoder());
         }
 
@@ -36,7 +36,9 @@ import javax.sql.DataSource;
 
             http.csrf().disable()
                     .authorizeRequests()
-//                    .antMatchers(HttpMethod.GET,"/api/users/all/users").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET,"/api/users/all/users").permitAll()
+                    .antMatchers("/api/users/update/**").permitAll()
+                    .antMatchers("/api/users/user/**").permitAll()
                     .antMatchers("/login").permitAll()
                     .antMatchers("/api/users/create/**").permitAll()
                     .antMatchers("/api/events/approved").permitAll()

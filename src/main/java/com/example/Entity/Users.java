@@ -7,6 +7,7 @@ import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -22,6 +23,11 @@ public class Users {
     private long userid;
 
    // @Column(name = "First_Name")
+
+    @NotNull
+    @Size(min = 2,max = 15)
+    private  String username;
+
     @NotNull
     @Size(min = 2,max = 15)
     private  String firstname;
@@ -41,7 +47,7 @@ public class Users {
 
     @DateTimeFormat
    // @Column (name = "User_Date")
-    private Date userdate;
+    private LocalDate userdate;
 
     @NotNull@NotBlank
     private String password;
@@ -88,9 +94,9 @@ public class Users {
 
     public void setDeleted(boolean deleted) { this.deleted = deleted; }
 
-    public Date getUserdate() { return userdate; }
+    public LocalDate getUserdate() { return userdate; }
 
-    public void setUserdate(Date userdate) { this.userdate = userdate; }
+    public void setUserdate(LocalDate userdate) { this.userdate = userdate; }
 
  public Roles getRoleid() {
   return roleid;
@@ -130,5 +136,13 @@ public class Users {
 
  public void setPhonenumber(int phonenumber) {
   this.phonenumber = phonenumber;
+ }
+
+ public String getUsername() {
+  return username;
+ }
+
+ public void setUsername(String username) {
+  this.username = username;
  }
 }

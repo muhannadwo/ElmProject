@@ -9,7 +9,6 @@ import com.example.Servicee.EmailSendingService;
 import com.example.Servicee.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,22 +37,16 @@ public class UsersServiceImplementation implements UserService {
     }
 
     @Override
-    public ResponseEntity findById(Long id){
+    public UsersDTO findById(Long id){
 
-        if(usersRepository.findById(id).isPresent()){
 
             Users users = usersRepository.findById(id).get();
             UsersDTO usersDTO = modelMapper.map(users, UsersDTO.class);
-            return ResponseEntity.ok(usersDTO);
-
-        }else{
-
-            return ResponseEntity.notFound().build();
-        }
+            return usersDTO;
     }
 
     @Override
-    public ResponseEntity createUser(UsersDTO usrdto, Long rid){
+    public Users createUser(UsersDTO usrdto, Long rid){
 
         String a = "";
         if (rid == 1){
@@ -64,46 +57,38 @@ public class UsersServiceImplementation implements UserService {
             a= "ROLE_USER";
         }
 
+
         Users usr = modelMapper.map(usrdto,Users.class);
         usr.setRoleid( rolesRepository.findById(a).get());
         String encoded=new BCryptPasswordEncoder().encode(usr.getPassword());
         usr.setPassword(encoded);
+//        usr.setRoleid(rolesRepository.findById(usrdto.getRole()).get());
         //emailSendingService.sendNotificaitoin(usr.getUseremail(),"Thanks For Registering!","Good To Have You With Us.");
 
-        return ResponseEntity.ok(usersRepository.save(usr));
+        return usersRepository.save(usr);
 
     }
 
     @Override
-    public ResponseEntity updateUser(UsersDTO usersDTO, Long uid){
-        if(usersRepository.findById(uid).isPresent()){
+    public Users updateUser(UsersDTO usersDTO, Long uid){
+
          Users user1 = usersRepository.findById(uid).get();
 
           Users users = modelMapper.map(usersDTO,Users.class);
+
           users.setRoleid(user1.getRoleid());
 //          if (usersRepository.findById(uid).isPresent()){
               users.setUserid(uid);
-              return ResponseEntity.ok(usersRepository.save(users));}
-              else{
-            return ResponseEntity.badRequest().build();
-        }
-
-
-
-
-
+              return usersRepository.save(users);
     }
 
     @Override
-    public ResponseEntity IsDeleted(Long id){
+    public void IsDeleted(Long id){
 
-        if (usersRepository.findById(id).isPresent()){
         Users users = usersRepository.findById(id).get();
         users.setDeleted(false);
-        return ResponseEntity.ok(usersRepository.save(users));}
-        else{
-            return ResponseEntity.notFound().build();
-        }
+         usersRepository.save(users);
+
     }
 
     @Override

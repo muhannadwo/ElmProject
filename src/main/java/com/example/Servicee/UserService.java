@@ -15,13 +15,13 @@ public interface UserService {
 
 
     Iterable<Users> findAll();
-    ResponseEntity findById(Long id);
+    UsersDTO findById(Long id);
 
-    ResponseEntity createUser(UsersDTO usersDTO, Long rid);
+    Users createUser(UsersDTO usersDTO, Long rid);
 
-    ResponseEntity updateUser(UsersDTO usersDTO, Long uid);
+    Users updateUser(UsersDTO usersDTO, Long uid);
 
-    ResponseEntity IsDeleted(Long id);
+    void IsDeleted(Long id);
 
     List<Users> findAllIfDeleted();
 
