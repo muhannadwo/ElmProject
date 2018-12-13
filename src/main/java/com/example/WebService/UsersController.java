@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping (value = "/api/users")
-@CrossOrigin
+//@CrossOrigin
 public class UsersController {
 
 
@@ -31,14 +31,16 @@ public class UsersController {
     @Autowired
     private ModelMapper modelMapper;
 
+
+
     @GetMapping (value = "/all/users")
-//    @PreAuthorize("(hasRole('ADMIN'))")
+    @PreAuthorize("(hasRole('ADMIN'))")
     public Iterable<Users> findall(){
         return  userService.findAll();
     }
 
     @GetMapping (value = "/user/{id}")
-//    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
+    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public ResponseEntity findbyid(@PathVariable Long id){
         if(usersRepository.findById(id).isPresent()){
         return ResponseEntity.ok(userService.findById(id));}
@@ -71,7 +73,7 @@ public class UsersController {
     }
 
     @GetMapping (value = "/delete/{id}")
-    @PreAuthorize("(hasRole('ADMIN'))")
+//    @PreAuthorize("(hasRole('ADMIN'))")
     public ResponseEntity<Void> isdeleted (@PathVariable Long id){
 
         if (usersRepository.findById(id).isPresent()){

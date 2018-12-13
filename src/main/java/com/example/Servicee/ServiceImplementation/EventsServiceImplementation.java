@@ -1,7 +1,6 @@
 package com.example.Servicee.ServiceImplementation;
 
 
-import com.example.Configs.ObjectMapperUtils;
 import com.example.DTOs.EventsDTO;
 import com.example.Entity.Events;
 import com.example.Entity.Ticket;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EventsServiceImplementation implements EventsService {
@@ -40,29 +38,34 @@ public class EventsServiceImplementation implements EventsService {
 
 
     @Override
-    public List<EventsDTO> findAll(){
+    public List<Events> findAll(){
 
-    List<Events> events =  eventsRepository.findAll();
-    List<EventsDTO> eventsDTOS = ObjectMapperUtils.mapAll(events,EventsDTO.class);
-    return eventsDTOS;
+// if u wanna use mapping with DTO, map all array with mapAll()
+//    List<Events> events =  eventsRepository.findAll();
+//    List<EventsDTO> eventsDTOS = ObjectMapperUtils.mapAll(events,EventsDTO.class);
+//    return eventsDTOS;
+
+        return eventsRepository.findAll();
 
     }
 
     @Override
-    public Optional<Events> findById(Long id) {
-        return eventsRepository.findById(id);
+    public EventsDTO findById(Long id) {
+        Events events = eventsRepository.findById(id).get();
+        EventsDTO eventsDTO = modelMapper.map(events, EventsDTO.class);
+        return eventsDTO;
     }
 
     @Override
-    public ResponseEntity createEvent(EventsDTO eventsDTO, Long id){
+    public Events createEvent(EventsDTO eventsDTO, Long id){
 
         LocalDate date = LocalDate.now().minusDays(1);
         Events events = modelMapper.map(eventsDTO, Events.class);
 
         if ( date.isBefore(events.getEventdate())) {
             events.setOrganizer_id(usersRepository.findById(id).get());
-            return ResponseEntity.ok(eventsRepository.save(events));
-        } return ResponseEntity.badRequest().build();
+             return eventsRepository.save(events);
+        } return null;
     }
 
     @Override
@@ -96,7 +99,7 @@ public class EventsServiceImplementation implements EventsService {
 
         Events events = eventsRepository.findById(id).get();
         events.setDeleted(true);
-        eventsRepository.save(findById(id).get());
+        eventsRepository.save(events);
         List<Ticket> tickets = ticketRepository.findByEventsidAndCanceledFalse(events);
         for (Ticket ticket : tickets){
             emailSendingService.sendNotificaitoin(ticket.getAttenderid().getUseremail(),"Event Deleted!", "Event '" + events.getEventname() + "' Was Deleted!");
@@ -107,13 +110,13 @@ public class EventsServiceImplementation implements EventsService {
     @Override
     public void isActiveEvent(Long id){
         eventsRepository.findById(id).get().setActive(true);
-        eventsRepository.save(findById(id).get());
+        eventsRepository.save(eventsRepository.findById(id).get());
     }
 
     @Override
     public void isNotActiveEvent(Long id) {
         eventsRepository.findById(id).get().setActive(false);
-        eventsRepository.save(findById(id).get());
+        eventsRepository.save(eventsRepository.findById(id).get());
     }
 
     @Override

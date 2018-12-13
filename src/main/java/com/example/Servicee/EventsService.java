@@ -7,18 +7,17 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface EventsService {
 
 
 
-    List<EventsDTO> findAll();
+    List<Events> findAll();
 
-    Optional<Events> findById(Long id);
+    EventsDTO findById(Long id);
 
-    ResponseEntity createEvent(EventsDTO eventsDTO, Long id);
+    Events createEvent(EventsDTO eventsDTO, Long id);
 
     ResponseEntity updateEvent(EventsDTO eventsDTO, long eid);
 

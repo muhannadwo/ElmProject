@@ -2,6 +2,7 @@ package com.example.Servicee.ServiceImplementation;
 
 
 import com.example.DTOs.UsersDTO;
+import com.example.Entity.Roles;
 import com.example.Entity.Users;
 import com.example.Repository.RolesRepository;
 import com.example.Repository.UsersRepository;
@@ -79,6 +80,10 @@ public class UsersServiceImplementation implements UserService {
           users.setRoleid(user1.getRoleid());
 //          if (usersRepository.findById(uid).isPresent()){
               users.setUserid(uid);
+
+        String encoded=new BCryptPasswordEncoder().encode(users.getPassword());
+        users.setPassword(encoded);
+
               return usersRepository.save(users);
     }
 
@@ -109,5 +114,16 @@ public class UsersServiceImplementation implements UserService {
     @Override
     public List<Users> findByPhonenumber(int number) {
         return usersRepository.findByPhonenumber(number);
+    }
+
+    @Override
+    public UsersDTO findByUserName(String a) {
+
+        Users users = usersRepository.findByUsername(a);
+        UsersDTO usersDTO = modelMapper.map(users, UsersDTO.class);
+        return usersDTO;
+    }
+    public Roles findByUser(String username){
+        return rolesRepository.findById(usersRepository.findByUsername(username).getRoleid().getRolename()).get();
     }
 }

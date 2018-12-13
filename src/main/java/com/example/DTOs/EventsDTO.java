@@ -3,12 +3,19 @@ package com.example.DTOs;
 import com.example.Entity.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
 public class EventsDTO {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long eventid;
 
     @Size(min = 2,max = 15)
     private  String eventname;
@@ -86,5 +93,13 @@ public class EventsDTO {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public long getEventid() {
+        return eventid;
+    }
+
+    public void setEventid(long eventid) {
+        this.eventid = eventid;
     }
 }

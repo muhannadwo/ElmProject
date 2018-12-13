@@ -34,14 +34,19 @@ import javax.sql.DataSource;
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
-            http.csrf().disable()
+            http.csrf().disable().cors().disable()
                     .authorizeRequests()
-                    .antMatchers(HttpMethod.GET,"/api/users/all/users").permitAll()
-                    .antMatchers("/api/users/update/**").permitAll()
-                    .antMatchers("/api/users/user/**").permitAll()
-                    .antMatchers("/login").permitAll()
-                    .antMatchers("/api/users/create/**").permitAll()
-                    .antMatchers("/api/events/approved").permitAll()
+//                    .anyRequest().permitAll()
+//                    .antMatchers(HttpMethod.GET,"/api/users/all/users").permitAll()
+//                    .antMatchers("/api/users/update/**").permitAll()
+//                    .antMatchers("/api/users/user/**").permitAll()
+//                    .antMatchers("/api/users/delete/**").permitAll()
+//                    .antMatchers("/login").permitAll()
+                      .antMatchers("/api/users/create/**").permitAll()
+//                    .antMatchers("/api/events/all/events").permitAll()
+//                    .antMatchers("/api/events/event/**").permitAll()
+//                    .antMatchers("/api/events/delete/**").permitAll()
+//                    .antMatchers("/api/events/active/**").permitAll()
                     .anyRequest().authenticated()
                     .and().httpBasic(); // Authenticate users with HTTP basic authentication
 

@@ -2,6 +2,7 @@ package com.example.Servicee;
 
 
 import com.example.DTOs.UsersDTO;
+import com.example.Entity.Roles;
 import com.example.Entity.Users;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public interface UserService {
     List<Users> findAllIfDeleted();
 
     List<Users> findByPhonenumber(int number);
+
+    UsersDTO findByUserName(String a);
+   Roles findByUser(String username);
 
 
 

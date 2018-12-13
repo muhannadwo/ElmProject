@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+//@CrossOrigin
 @RestController
 @RequestMapping (value = "/api/events")
 
@@ -24,22 +25,19 @@ public class EventsController {
     @Autowired
     private EventsService eventsService;
 
-    @Autowired
-    private EventsRepository eventsRepository;
 
     @GetMapping (value = "/all/events")
-    @PreAuthorize("(hasRole('ADMIN'))")
-    public List<EventsDTO> findall(){
+    @PreAuthorize("(hasRole('ORG'))")
+    public List<Events> findall(){
        return eventsService.findAll();
     }
 
     @GetMapping (value = "/event/{id}", produces = "application/json")
-    public ResponseEntity<Events> findById(@PathVariable Long id){
-        Optional<Events> event =  eventsService.findById(id);
-
-        if( event.isPresent()){
-             return ResponseEntity.ok(event.get());
-        }else{
+    public ResponseEntity findById(@PathVariable Long id){
+            if(eventsService.findById(id)!=null){
+             return ResponseEntity.ok(eventsService.findById(id));
+        }else
+            {
             return ResponseEntity.notFound().build();
         }
     }
@@ -65,7 +63,7 @@ public class EventsController {
     }
 
     @GetMapping (value = "/active/{id}")
-    @PreAuthorize("(hasRole('ORG'))")
+//    @PreAuthorize("(hasRole('ORG'))")
     public void isactive (@PathVariable Long id){
         eventsService.isActiveEvent(id);
     }
@@ -75,7 +73,7 @@ public class EventsController {
     public void isnotactive (@PathVariable Long id){ eventsService.isNotActiveEvent(id);}
 
     @GetMapping (value = "/delete/{id}")
-    @PreAuthorize("(hasAnyRole('ADMIN'))")
+//    @PreAuthorize("(hasAnyRole('ADMIN'))")
     public void isdeleted(@PathVariable Long id){
         eventsService.isDeleted(id);
     }
