@@ -59,13 +59,14 @@ public class UsersServiceImplementation implements UserService {
         }
 
 
+        long counter = usersRepository.countByDeletedTrueOrDeletedFalse();
         Users usr = modelMapper.map(usrdto,Users.class);
         usr.setRoleid( rolesRepository.findById(a).get());
         String encoded=new BCryptPasswordEncoder().encode(usr.getPassword());
         usr.setPassword(encoded);
 //        usr.setRoleid(rolesRepository.findById(usrdto.getRole()).get());
         //emailSendingService.sendNotificaitoin(usr.getUseremail(),"Thanks For Registering!","Good To Have You With Us.");
-
+        usr.setCount(1+counter);
         return usersRepository.save(usr);
 
     }

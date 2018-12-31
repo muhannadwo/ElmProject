@@ -32,6 +32,8 @@ public class Events {
     private String eventtime;
     private long ecount = 0;
 
+    private long count = 0;
+
     // User [ Organizer ] Object.
 
     @ManyToOne //(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
@@ -133,5 +135,13 @@ public class Events {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

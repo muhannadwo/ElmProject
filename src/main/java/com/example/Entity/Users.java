@@ -61,6 +61,8 @@ public class Users {
     @NumberFormat
     private int phonenumber;
 
+    private long count = 0;
+
     // Object From Roles.
 
     //(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
@@ -145,4 +147,12 @@ public class Users {
  public void setUsername(String username) {
   this.username = username;
  }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
 }

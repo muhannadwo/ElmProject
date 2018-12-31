@@ -27,7 +27,7 @@ public class EventsController {
 
 
     @GetMapping (value = "/all/events")
-    @PreAuthorize("(hasRole('ORG'))")
+//    @PreAuthorize("(hasRole('ORG'))")
     public List<Events> findall(){
        return eventsService.findAll();
     }
@@ -43,7 +43,7 @@ public class EventsController {
     }
 
     @PostMapping (value = "/create/{id}")
-    @PreAuthorize("(hasRole('ADMIN'))")
+    @PreAuthorize("(hasAnyRole('ADMIN','ORG'))")
     public ResponseEntity createevent( @RequestBody @Valid EventsDTO eventsDTO, @PathVariable Long id, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());}
@@ -69,7 +69,7 @@ public class EventsController {
     }
 
     @GetMapping (value = "/deactive/{id}")
-    @PreAuthorize("(hasRole('ORG'))")
+//    @PreAuthorize("(hasRole('ORG'))")
     public void isnotactive (@PathVariable Long id){ eventsService.isNotActiveEvent(id);}
 
     @GetMapping (value = "/delete/{id}")

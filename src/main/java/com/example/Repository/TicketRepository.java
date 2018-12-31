@@ -17,5 +17,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findAllByAttenderid(Users user);
     //Long countByEventsid(Events events);
     List<Ticket> findByEventsidAndCanceledFalse(Events events);
+    long countByCanceledTrueOrCanceledFalse();
 
 }

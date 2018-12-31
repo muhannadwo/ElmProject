@@ -59,11 +59,14 @@ public class EventsServiceImplementation implements EventsService {
     @Override
     public Events createEvent(EventsDTO eventsDTO, Long id){
 
+        long counter = eventsRepository.countByActiveTrueOrActiveFalse();
         LocalDate date = LocalDate.now().minusDays(1);
         Events events = modelMapper.map(eventsDTO, Events.class);
 
         if ( date.isBefore(events.getEventdate())) {
             events.setOrganizer_id(usersRepository.findById(id).get());
+            events.setActive(true);
+            events.setCount(1+counter);
              return eventsRepository.save(events);
         } return null;
     }

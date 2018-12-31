@@ -17,6 +17,8 @@ public class EventsDTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long eventid;
 
+    private boolean active;
+
     @Size(min = 2,max = 15)
     private  String eventname;
     @DateTimeFormat
@@ -27,6 +29,9 @@ public class EventsDTO {
     private String eventcity;
     private String eventtime;
     private long ecount = 0;
+
+    private long count = 0;
+
     private UsersDTO organizer_id;
     private List<Comment> comments;
 
@@ -101,5 +106,21 @@ public class EventsDTO {
 
     public void setEventid(long eventid) {
         this.eventid = eventid;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

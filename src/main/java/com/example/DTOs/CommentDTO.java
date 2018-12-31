@@ -10,9 +10,14 @@ public class CommentDTO {
     @Size(min = 1,max = 255)
     private String ccomment;
 
+    private String eventname;
+
     private UsersDTO userid;
     @JsonIgnore
     private EventsDTO eventsid;
+
+    private long count = 0;
+
 
     @Max(5)
     private int eventrate;
@@ -47,5 +52,21 @@ public class CommentDTO {
 
     public void setEventrate(int eventrate) {
         this.eventrate = eventrate;
+    }
+
+    public String getEventname() {
+        return eventname;
+    }
+
+    public void setEventname(String eventname) {
+        this.eventname = eventname;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

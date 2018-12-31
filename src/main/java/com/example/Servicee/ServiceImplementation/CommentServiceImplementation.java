@@ -42,34 +42,33 @@ public class CommentServiceImplementation implements CommentService {
     }
 
     @Override
-    public ResponseEntity findById(Long id) {
-        if (commentRepository.findById(id).isPresent()){
-            return ResponseEntity.ok(commentRepository.findById(id).get());}
-            else {
-            return ResponseEntity.notFound().build();
-        }
+    public Comment findById(Long id) {
+            return commentRepository.findById(id).get();
     }
 
     @Override
-    public ResponseEntity createComment(Comment comment, Long uid, Long eid) {
+    public Comment createComment( Comment comment,Long uid, Long eid) {
 
+        long commentcounter = commentRepository.countByCanceledTrueOrCanceledFalse();
         Users users = usersRepository.findById(uid).get();
         Events events = eventsRepository.findById(eid).get();
 
         LocalDateTime date = LocalDateTime.now().minusMinutes(2);
         long counter = commentRepository.countByUseridAndEventsidAndCdateAfter(users,events,date);
        // if ( comment.getCdate().isAfter(date)) {
-        if (counter == 0){
+        if (counter == 0) {
 
-
+            comment.setEventname(events.getEventname());
             comment.setUserid(usersRepository.findById(uid).get());
             //here
             comment.setEventsid(eventsRepository.findById(eid).get());
             comment.setCdate(LocalDateTime.now());
             //get comments array list from event class and add the new comment in it.
             events.getComments().add(comment);
-            return ResponseEntity.ok(commentRepository.save(comment));
-        }return ResponseEntity.badRequest().build();
+            comment.setCount(1+commentcounter);
+            return commentRepository.save(comment);
+        }
+        return null;
     }
 
     @Override

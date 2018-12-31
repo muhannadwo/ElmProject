@@ -51,6 +51,9 @@ public class UsersDTO {
     @NumberFormat
     private int phonenumber;
 
+    private long count = 0;
+
+
     private Roles role;
 
     public String getFirstname() {
@@ -140,5 +143,13 @@ public class UsersDTO {
 
     public void setUserid(long userid) {
         this.userid = userid;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

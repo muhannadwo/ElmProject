@@ -40,7 +40,7 @@ public class UsersController {
     }
 
     @GetMapping (value = "/user/{id}")
-    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
+//    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public ResponseEntity findbyid(@PathVariable Long id){
         if(usersRepository.findById(id).isPresent()){
         return ResponseEntity.ok(userService.findById(id));}

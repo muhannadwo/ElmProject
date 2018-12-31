@@ -12,9 +12,14 @@ public class Ticket {
     @GeneratedValue ( strategy = GenerationType.IDENTITY)
     private long ticketid;
 
+    private String eventname;
+    private String eventdate;
+
     @ColumnDefault("0")
     private boolean attended;
     private boolean canceled;
+
+    private long count = 0;
 
     // Events Object.
     @ManyToOne //(cascade = CascadeType.ALL)
@@ -65,5 +70,29 @@ public class Ticket {
 
     public void setAttended(boolean attended) {
         this.attended = attended;
+    }
+
+    public String getEventname() {
+        return eventname;
+    }
+
+    public void setEventname(String eventname) {
+        this.eventname = eventname;
+    }
+
+    public String getEventdate() {
+        return eventdate;
+    }
+
+    public void setEventdate(String eventdate) {
+        this.eventdate = eventdate;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

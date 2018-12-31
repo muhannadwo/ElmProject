@@ -24,6 +24,8 @@ public class Comment {
     private boolean canceled;
     @Max(5)
     private int eventrate;
+    private String eventname;
+    private long count = 0;
 
     @ManyToOne
     private Users userid;
@@ -91,5 +93,21 @@ public class Comment {
 
     public void setEventrate(int eventrate) {
         this.eventrate = eventrate;
+    }
+
+    public String getEventname() {
+        return eventname;
+    }
+
+    public void setEventname(String eventname) {
+        this.eventname = eventname;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

@@ -17,6 +17,7 @@ public interface EventsRepository extends JpaRepository<Events, Long> {
     List<Events> findByEventdate(LocalDate eventdate);
     List<Events> findByEventcityAndEventdateIn(String city, LocalDate date);
     List<Events> findByEventcityAndEventdateAndDeletedFalse(String city, LocalDate date);
+    long countByActiveTrueOrActiveFalse();
 
 
 }

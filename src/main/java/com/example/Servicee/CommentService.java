@@ -14,9 +14,9 @@ public interface CommentService {
 
     Iterable<Comment> findAll();
 
-    ResponseEntity findById(Long id);
+    Comment findById(Long id);
 
-    ResponseEntity createComment (Comment comment, Long uid, Long eid);
+    Comment createComment (Comment comment,Long uid, Long eid);
 
     ResponseEntity updateComment (CommentDTO commentDTO,long id);
 

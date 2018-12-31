@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
@@ -34,8 +35,8 @@ import javax.sql.DataSource;
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
-            http.csrf().disable().cors().disable()
-                    .authorizeRequests()
+            http.csrf().disable()
+                    .httpBasic().and().authorizeRequests()
 //                    .anyRequest().permitAll()
 //                    .antMatchers(HttpMethod.GET,"/api/users/all/users").permitAll()
 //                    .antMatchers("/api/users/update/**").permitAll()
@@ -48,7 +49,7 @@ import javax.sql.DataSource;
 //                    .antMatchers("/api/events/delete/**").permitAll()
 //                    .antMatchers("/api/events/active/**").permitAll()
                     .anyRequest().authenticated()
-                    .and().httpBasic(); // Authenticate users with HTTP basic authentication
+                    .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);// Authenticate users with HTTP basic authentication
 
 
         }

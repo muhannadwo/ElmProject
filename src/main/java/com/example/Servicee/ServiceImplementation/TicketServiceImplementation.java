@@ -44,10 +44,10 @@ public class TicketServiceImplementation implements TicketService {
 
 
     @Override
-    public List<TicketDTO> findAll() {
-        List<Ticket> tickets = ticketRepository.findAll();
-        List<TicketDTO> ticketDTOS = ObjectMapperUtils.mapAll(tickets, TicketDTO.class);
-        return ticketDTOS;
+    public List<Ticket> findAll() {
+        return ticketRepository.findAll();
+//        List<TicketDTO> ticketDTOS = ObjectMapperUtils.mapAll(tickets, TicketDTO.class);
+//        return ticketDTOS;
 
     }
 
@@ -58,10 +58,11 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
-    public ResponseEntity createTicket (Ticket tkt, Long uid, Long eid) {
+    public Ticket createTicket ( Long uid, Long eid) {
 
+        Ticket tkt = new Ticket();
 
-
+        long counter = ticketRepository.countByCanceledTrueOrCanceledFalse();
         Events events = eventsRepository.findById(eid).get();
         Users users = usersRepository.findById(uid).get();
 
@@ -72,7 +73,7 @@ public class TicketServiceImplementation implements TicketService {
         //  if( events.isDeleted() == true && !events.isActive() && events.getEventdate() ==  users.isDeleted() == true)
         LocalDate date = LocalDate.now().minusDays(1);
         if(events.isActive() && !events.isDeleted() && events.getEventdate().isAfter(date) &&
-                events.getEcount() <= events.getEventcapacity()) {
+                events.getEcount() < events.getEventcapacity()) {
 //        List<Ticket> tickets = ticketRepository.findAllByAttenderid(users);
             for (Ticket tekt : ticketRepository.findAllByAttenderid(users))
                 if (events.getEventdate().equals(tekt.getEventsid().getEventdate())) {
@@ -81,10 +82,13 @@ public class TicketServiceImplementation implements TicketService {
 
             tkt.setAttenderid(usersRepository.findById(uid).get());
             tkt.setEventsid(eventsRepository.findById(eid).get());
+            tkt.setEventname(eventsRepository.findById(eid).get().getEventname());
+            tkt.setEventdate(eventsRepository.findById(eid).get().getEventdate().toString());
 
             events.setEcount(1+events.getEcount());
-            emailSendingService.sendNotificaitoin(usersRepository.findById(uid).get().getUseremail(), "Thanks For Booking", " Hope You enjoy The Event! "+ tkt.getAttenderid().getFirstname());
-            return ResponseEntity.ok(ticketRepository.save(tkt));
+            tkt.setCount(1+counter);
+//            emailSendingService.sendNotificaitoin(usersRepository.findById(uid).get().getUseremail(), "Thanks For Booking", " Hope You enjoy The Event! "+ tkt.getAttenderid().getFirstname());
+            return ticketRepository.save(tkt);
 
 
 //            tkt.setAttenderid(users);
@@ -94,7 +98,7 @@ public class TicketServiceImplementation implements TicketService {
 //            ticketRepository.save(tkt);
 
         }
-        return ResponseEntity.badRequest().build();
+        return null;
     }
 
 
@@ -108,15 +112,16 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
-    public ResponseEntity<Ticket> IsCanceled(Long id) {
+    public Ticket IsCanceled(Long id) {
         if (ticketRepository.findById(id).isPresent()){
         ticketRepository.findById(id).get().setCanceled(true);
         Events events=ticketRepository.findById(id).get().getEventsid();
         events.setEcount(events.getEcount() - 1);
-        emailSendingService.sendNotificaitoin(ticketRepository.findById(id).get().getAttenderid().getUseremail(),"Ticket Canceled!", "Hope You Book Tickets Again");
-        return ResponseEntity.ok(ticketRepository.save(findById(id).get()));}
+//        emailSendingService.sendNotificaitoin(ticketRepository.findById(id).get().getAttenderid().getUseremail(),
+//                "Ticket Canceled!", "Hope You Book Tickets Again");
+        return ticketRepository.save(findById(id).get());}
         else{
-            return ResponseEntity.notFound().build();
+            return null;
         }
     }
 

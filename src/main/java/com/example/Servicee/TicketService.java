@@ -16,15 +16,15 @@ public interface TicketService {
 
 
 
-     List<TicketDTO> findAll();
+     List<Ticket> findAll();
 
      Optional<Ticket> findById(Long id);
 
-     ResponseEntity createTicket (Ticket ticket, Long uid, Long eid);
+     Ticket createTicket (Long uid, Long eid);
 
      void updateTicket (Ticket tkt);
 
-     ResponseEntity IsCanceled(Long id);
+     Ticket IsCanceled(Long id);
 
      ResponseEntity IsAttended(Long id);
 

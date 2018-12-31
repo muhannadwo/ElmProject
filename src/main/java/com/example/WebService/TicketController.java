@@ -4,6 +4,7 @@ package com.example.WebService;
 import com.example.DTOs.TicketDTO;
 import com.example.Entity.Ticket;
 import com.example.Entity.Users;
+import com.example.Repository.EventsRepository;
 import com.example.Repository.TicketRepository;
 import com.example.Repository.UsersRepository;
 import com.example.Servicee.TicketService;
@@ -28,25 +29,27 @@ public class TicketController {
     @Autowired
     private TicketRepository ticketRepository;
 
+    @Autowired
+    private EventsRepository eventsRepository;
+
 
 
 
     @GetMapping (value = "/all/tickets")
     @PreAuthorize("(hasRole('ADMIN'))")
-    public List<TicketDTO> findall(){
+    public List<Ticket> findall(){
 
         return ticketService.findAll();
     }
 
     @GetMapping (value = "/all/user/{uid}")
-    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
     public Iterable<Ticket> findalluser(@PathVariable long uid){
 
         return ticketService.findAllByUser(uid);
     }
 
     @GetMapping (value = "/all/delete")
-    @PreAuthorize("(hasRole('ADMIN'))")
+//    @PreAuthorize("(hasRole('ADMIN'))")
     public List<Ticket> findallnotcanceled(){
 
         return ticketService.findByCanceledFalse();
@@ -64,13 +67,13 @@ public class TicketController {
 
     }
 
-    @PostMapping (value = "/create/{uid}/{eid}")
+    @GetMapping (value = "/create/{uid}/{eid}")
     @PreAuthorize("(hasRole('USER'))")
-    public ResponseEntity createticket (@RequestBody Ticket tkt, @PathVariable Long uid, @PathVariable Long eid, BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    public ResponseEntity createticket ( @PathVariable Long uid, @PathVariable Long eid){
+        if (eventsRepository.findById(eid) == null ) {
+            return ResponseEntity.badRequest().build();
         }else{
-            return ResponseEntity.ok(ticketService.createTicket(tkt,uid,eid));
+            return ResponseEntity.ok(ticketService.createTicket(uid,eid));
         }
     }
 
@@ -80,7 +83,7 @@ public class TicketController {
     }
 
     @GetMapping (value = "/cancel/{id}")
-    @PreAuthorize("(hasAnyRole('ADMIN','USER'))")
+    @PreAuthorize("(hasAnyRole('ORG','USER'))")
     public ResponseEntity isdeleted(@PathVariable Long id){
         if (ticketRepository.findById(id).isPresent()){
         return ResponseEntity.ok(ticketService.IsCanceled(id));}
@@ -98,4 +101,9 @@ public class TicketController {
         else{
             return ResponseEntity.notFound().build();}
     }
+
+
+
+
+
 }

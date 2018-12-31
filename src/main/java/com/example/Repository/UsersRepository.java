@@ -13,5 +13,6 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
 
     List<Users> findByPhonenumber(int number);
     Users findByUsername(String username);
+    long countByDeletedTrueOrDeletedFalse();
 
 }
